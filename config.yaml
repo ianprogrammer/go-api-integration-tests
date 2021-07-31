@@ -1,0 +1,10 @@
+database:
+  host: "localhost"
+  databasePort: 5432
+  databaseName: "product"
+  userName: "product"
+  password: "product"
+
+server:
+  port: 8080
+  gracefullShutdownTimeout: 30
