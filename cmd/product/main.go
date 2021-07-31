@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/ianprogrammer/go-api-integration-test/internal/configuration"
+	"github.com/ianprogrammer/go-api-integration-test/config"
 	"github.com/ianprogrammer/go-api-integration-test/internal/database"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -18,7 +18,7 @@ type App struct{}
 
 func (app *App) Run() error {
 
-	config, err := configuration.LoadConfig()
+	config, err := config.LoadConfig()
 
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
