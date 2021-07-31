@@ -20,7 +20,7 @@ type AppConfig struct {
 	Database DatabaseConfig
 }
 
-func LoadConfig() (*AppConfig, error) {
+func LoadConfig() (AppConfig, error) {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -29,12 +29,12 @@ func LoadConfig() (*AppConfig, error) {
 	err := viper.ReadInConfig()
 
 	if err != nil {
-		return nil, err
+		return config, err
 	}
 
 	if err := viper.Unmarshal(&config); err != nil {
-		return nil, err
+		return config, err
 	}
 
-	return &config, nil
+	return config, nil
 }
