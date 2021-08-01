@@ -10,8 +10,10 @@ import (
 
 	"github.com/ianprogrammer/go-api-integration-test/config"
 	"github.com/ianprogrammer/go-api-integration-test/internal/database"
+	"github.com/ianprogrammer/go-api-integration-test/pkg/product"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
+	"gorm.io/gorm"
 )
 
 type App struct{}
@@ -23,15 +25,18 @@ func (app *App) Run() error {
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
-	_, err = database.NewDatabase(config.Database)
+	db, err := database.NewDatabase(config.Database)
 
 	if err != nil {
 		return err
 	}
 
+	database.MigrateDB(db)
+
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 
+	Container(db, e)
 	go func() {
 
 		if err := e.Start(fmt.Sprintf(":%d", config.Server.Port)); err != nil && err != http.ErrServerClosed {
@@ -62,4 +67,15 @@ func main() {
 		fmt.Println("Error starting up our REST API")
 		fmt.Println(err)
 	}
+}
+
+func Container(db *gorm.DB, e *echo.Echo) {
+
+	productRepository := product.Repository{
+		DB: db,
+	}
+
+	productService := product.NewService(&productRepository)
+	product.RegisterProductHandlers(e, productService)
+
 }
