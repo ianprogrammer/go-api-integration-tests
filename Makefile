@@ -7,3 +7,6 @@ down:
 
 run: 
 	go run cmd/product/main.go
+
+tests:
+	go test -v ./...
