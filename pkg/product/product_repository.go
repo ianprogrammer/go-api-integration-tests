@@ -1,6 +1,8 @@
 package product
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Repository struct {
 	DB *gorm.DB
@@ -18,7 +20,6 @@ func (pr *Repository) Insert(p Product) (Product, error) {
 	if result := pr.DB.Save(&p); result.Error != nil {
 		return Product{}, result.Error
 	}
-
 	return p, nil
 }
 
