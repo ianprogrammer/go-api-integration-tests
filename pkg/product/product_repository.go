@@ -10,10 +10,10 @@ type Repository struct {
 
 type IProductRepository interface {
 	Insert(p Product) (Product, error)
-	Delete(id uint) error
-	Update(id uint, p Product) (Product, error)
+	Delete(id string) error
+	Update(id string, p Product) (Product, error)
 	SelectAll() ([]Product, error)
-	SelectById(id uint) (Product, error)
+	SelectById(id string) (Product, error)
 }
 
 func (pr *Repository) Insert(p Product) (Product, error) {
@@ -23,14 +23,14 @@ func (pr *Repository) Insert(p Product) (Product, error) {
 	return p, nil
 }
 
-func (pr *Repository) Delete(id uint) error {
+func (pr *Repository) Delete(id string) error {
 	if result := pr.DB.Delete(&Product{}, id); result.Error != nil {
 		return result.Error
 	}
 	return nil
 }
 
-func (pr *Repository) Update(id uint, p Product) (Product, error) {
+func (pr *Repository) Update(id string, p Product) (Product, error) {
 	product, err := pr.SelectById(id)
 
 	if err != nil {
@@ -52,7 +52,7 @@ func (pr *Repository) SelectAll() ([]Product, error) {
 	return products, nil
 }
 
-func (pr *Repository) SelectById(id uint) (Product, error) {
+func (pr *Repository) SelectById(id string) (Product, error) {
 	var product Product
 
 	if result := pr.DB.First(&product, id); result.Error != nil {

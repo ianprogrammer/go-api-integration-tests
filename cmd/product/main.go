@@ -31,16 +31,21 @@ func (app *App) Run() error {
 		return err
 	}
 
-	database.MigrateDB(db)
+	err = database.MigrateDB(config.Migration, "file://db/migrations")
+
+	if err != nil {
+		return err
+	}
 
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 
 	Container(db, e)
+
 	go func() {
 
 		if err := e.Start(fmt.Sprintf(":%d", config.Server.Port)); err != nil && err != http.ErrServerClosed {
-			e.Logger.Fatal("shutting down the server")
+			e.Logger.Fatal("shutting down the server", err)
 		}
 	}()
 

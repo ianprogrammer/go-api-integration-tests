@@ -1,9 +1,7 @@
 package product
 
-import "gorm.io/gorm"
-
 type Product struct {
-	gorm.Model
+	ID    string `gorm:"-"`
 	Name  string
 	Price int64
 }

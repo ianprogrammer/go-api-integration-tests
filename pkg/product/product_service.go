@@ -5,11 +5,11 @@ type Service struct {
 }
 
 type IProductService interface {
-	GetById(id uint) (Product, error)
+	GetById(id string) (Product, error)
 	GetAll() ([]Product, error)
 	Post(p Product) (Product, error)
-	Update(id uint, p Product) (Product, error)
-	Delete(id uint) error
+	Update(id string, p Product) (Product, error)
+	Delete(id string) error
 }
 
 func NewService(repository IProductRepository) *Service {
@@ -19,7 +19,7 @@ func NewService(repository IProductRepository) *Service {
 	}
 }
 
-func (ps *Service) GetById(id uint) (Product, error) {
+func (ps *Service) GetById(id string) (Product, error) {
 	return ps.Repository.SelectById(id)
 }
 
@@ -31,10 +31,10 @@ func (ps *Service) Post(p Product) (Product, error) {
 	return ps.Repository.Insert(p)
 }
 
-func (ps *Service) Update(id uint, p Product) (Product, error) {
+func (ps *Service) Update(id string, p Product) (Product, error) {
 	return ps.Repository.Update(id, p)
 }
 
-func (ps *Service) Delete(id uint) error {
+func (ps *Service) Delete(id string) error {
 	return ps.Repository.Delete(id)
 }

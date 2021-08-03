@@ -2,7 +2,14 @@ database:
   host: "localhost"
   databasePort: 5432
   databaseName: "product"
-  userName: "product"
+  userName: "productuser"
+  password: "product"
+
+migration:
+  host: "localhost"
+  databasePort: 5432
+  databaseName: "product"
+  userName: "productuser"
   password: "product"
 
 server:

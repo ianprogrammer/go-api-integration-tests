@@ -2,7 +2,6 @@ package product
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -62,13 +61,8 @@ func (ph *Handler) getAllProduct(c echo.Context) error {
 
 func (ph *Handler) getByIdProduct(c echo.Context) error {
 	id := c.Param("id")
-	uid, err := strconv.ParseUint(id, 10, 32)
 
-	if err != nil {
-		return err
-	}
-
-	product, err := ph.ProductService.GetById(uint(uid))
+	product, err := ph.ProductService.GetById(id)
 
 	if err != nil {
 		return err
@@ -86,13 +80,7 @@ func (ph *Handler) updateProduct(c echo.Context) error {
 		return err
 	}
 
-	uid, err := strconv.ParseUint(id, 10, 32)
-
-	if err != nil {
-		return err
-	}
-
-	product, err := ph.ProductService.Update(uint(uid), Product{
+	product, err := ph.ProductService.Update(id, Product{
 		Name:  p.Name,
 		Price: p.Price,
 	})
@@ -106,13 +94,8 @@ func (ph *Handler) updateProduct(c echo.Context) error {
 
 func (ph *Handler) deleteProduct(c echo.Context) error {
 	id := c.Param("id")
-	uid, err := strconv.ParseUint(id, 10, 32)
 
-	if err != nil {
-		return err
-	}
-
-	if err := ph.ProductService.Delete(uint(uid)); err != nil {
+	if err := ph.ProductService.Delete(id); err != nil {
 		return err
 	}
 	return c.String(http.StatusNoContent, "")

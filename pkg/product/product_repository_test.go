@@ -2,8 +2,10 @@ package product_test
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"testing"
 
@@ -29,6 +31,7 @@ var (
 func TestMain(m *testing.M) {
 	log.Println("Starting postgres container...")
 	postgresPort := nat.Port("5432/tcp")
+
 	postgres, err := tc.GenericContainer(context.Background(),
 		tc.GenericContainerRequest{
 			ContainerRequest: tc.ContainerRequest{
@@ -37,6 +40,7 @@ func TestMain(m *testing.M) {
 				Env: map[string]string{
 					"POSTGRES_PASSWORD": "pass",
 					"POSTGRES_USER":     "user",
+					"POSTGRES_DB":       "product",
 				},
 				WaitingFor: wait.ForAll(
 					wait.ForLog("database system is ready to accept connections"),
@@ -45,6 +49,7 @@ func TestMain(m *testing.M) {
 			},
 			Started: true,
 		})
+
 	if err != nil {
 		log.Fatal("start:", err)
 	}
@@ -74,7 +79,19 @@ func TestMain(m *testing.M) {
 		log.Fatal("could not be possible to connect to database")
 	}
 
-	database.MigrateDB(_conn)
+	path, err := filepath.Abs("../../db/migrations")
+
+	if err != nil {
+		log.Fatal("could not be possible to get migration path")
+	}
+
+	path = fmt.Sprintf("file://%s", path)
+
+	err = database.MigrateDB(databaseConfig, path)
+
+	if err != nil {
+		log.Fatal("could not be possible to migrate database ", err)
+	}
 	_sut = &product.Repository{
 		DB: _conn,
 	}

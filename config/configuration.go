@@ -10,14 +10,17 @@ type DatabaseConfig struct {
 	DatabasePort int
 }
 
+type MigrationConfig = DatabaseConfig
+
 type ServerConfig struct {
 	Port                     int
 	GracefullShutdownTimeout int
 }
 
 type AppConfig struct {
-	Server   ServerConfig
-	Database DatabaseConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	Migration MigrationConfig
 }
 
 func LoadConfig() (AppConfig, error) {
